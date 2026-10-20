@@ -1,0 +1,14 @@
+pandas
+numpy
+sqlalchemy
+pymssql
+cryptography
+requests
+matplotlib
+seaborn
+plotly
+scikit-learn
+joblib
+streamlit>=1.50
+jupyter
+python-dotenv
