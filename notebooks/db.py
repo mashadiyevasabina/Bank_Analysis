@@ -39,7 +39,12 @@ def get_engine(database=None, admin=False):
         database=database or DB_NAME
     )
 
-    return create_engine(url, pool_pre_ping=True)
+    return create_engine(
+    url,
+    pool_pre_ping=True,
+    pool_recycle=300,
+    pool_timeout=30
+)
 
 
 def run_sql_file(path, engine):
