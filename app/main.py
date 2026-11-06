@@ -90,7 +90,7 @@ with tab1:
         st.bar_chart(df_bar, x="Filial", y=["Təsdiqlənən", "Rədd Edilən"])
 
 # =========================================================
-# TAB 2: CHURN SIMULATORU & AI KONSULTANT
+# TAB 2: CHURN SIMULATORU (BÜTÜN MODEL SÜTUNLARI İLƏ)
 # =========================================================
 with tab2:
     st.header("🔮 Müştəri Churn Riski və Avtomatik AI Rəy")
@@ -99,18 +99,31 @@ with tab2:
     col_in1, col_in2, col_in3 = st.columns(3)
     
     with col_in1:
-        age = st.number_input("Müştərinin Yaşı", min_value=18, max_value=90, value=42)
+        credit_score = st.number_input("Kredit Skoru (Credit Score)", min_value=300, max_value=850, value=650)
         gender = st.selectbox("Cins", ["male", "female"])
         city = st.selectbox("Şəhər", ["Baku", "Ganja", "Sumqayit"])
+        age = st.number_input("Müştərinin Yaşı", min_value=18, max_value=90, value=42)
 
     with col_in2:
+        tenure_years = st.number_input("Müştərilik Müddəti (İl)", min_value=0, max_value=20, value=3)
         balance = st.number_input("Hesab Balansı (AZN)", min_value=0.0, value=1500.0, step=500.0)
-        trans_count = st.number_input("Tranzaksiya Sayı", min_value=0, value=12)
-        trans_amount = st.number_input("Ümumi Tranzaksiya (AZN)", min_value=0.0, value=850.0)
+        salary = st.number_input("Təxmini İllik Gəlir / Məvacib (AZN)", min_value=0.0, value=45000.0, step=1000.0)
+        products_count = st.selectbox("İstifadə Etdiyi Məhsul Sayı", [1, 2, 3, 4], index=1)
 
     with col_in3:
+        has_card = st.selectbox("Kredit Kartı Var?", [1, 0], format_func=lambda x: "Bəli" if x == 1 else "Xeyr")
+        is_active = st.selectbox("Aktiv Müştəridir?", [1, 0], format_func=lambda x: "Bəli" if x == 1 else "Xeyr")
+        trans_count = st.number_input("Tranzaksiya Sayı", min_value=1, value=12)
+        trans_amount = st.number_input("Ümumi Tranzaksiya Məbləği (AZN)", min_value=0.0, value=850.0)
+
+    # Qoşulmuş əlavə parametrlər
+    st.markdown("#### ⚙️ Əlavə Kredit və Tranzaksiya Parametrləri")
+    col_add1, col_add2, col_add3 = st.columns(3)
+    with col_add1:
         total_loans = st.number_input("Götürdüyü Kredit Sayı", min_value=0, value=2)
+    with col_add2:
         rejected_loans = st.number_input("Rədd Edilən Kredit Sayı", min_value=0, value=1)
+    with col_add3:
         holiday_ratio = st.slider("Bayram Günlərində Əməliyyat (%)", 0, 100, 10) / 100.0
 
     avg_trans = trans_amount / trans_count if trans_count > 0 else 0.0
@@ -125,14 +138,27 @@ with tab2:
             my_bar.progress(percent_complete + 1, text=progress_text)
         my_bar.empty()
 
+        # Modelin gözlədiyi BÜTÜN (Orijinal + Feature Engineered) Sütunlar
+        input_df = pd.DataFrame([{
+            "credit_score": credit_score,
+            "gender": gender,
+            "city": city,
+            "age": age,
+            "tenure_years": tenure_years,
+            "balance": balance,
+            "products_count": products_count,
+            "has_card": has_card,
+            "is_active": is_active,
+            "salary": salary,
+            "total_trans_count": trans_count,
+            "total_trans_amount": trans_amount,
+            "avg_trans_amount": avg_trans,
+            "holiday_trans_ratio": holiday_ratio,
+            "total_loan_count": total_loans,
+            "rejected_loan_count": rejected_loans
+        }])
+
         if model is not None:
-            input_df = pd.DataFrame([{
-                "age": age, "gender": gender, "city": city,
-                "balance": balance, "total_trans_count": trans_count,
-                "total_trans_amount": trans_amount, "avg_trans_amount": avg_trans,
-                "holiday_trans_ratio": holiday_ratio, "total_loan_count": total_loans,
-                "rejected_loan_count": rejected_loans
-            }])
             churn_proba = model.predict_proba(input_df)[0, 1]
         else:
             churn_proba = 0.20
@@ -175,6 +201,10 @@ with tab2:
             if trans_count < 15:
                 ai_comments.append("😴 **Tranzaksiya Passivliyi:** Müştəri son dövrdə kartdan az istifadə edir.")
                 ai_actions.append("💡 Partner şəbəkələrində 2x Cashback kampaniyası göndərilməlidir.")
+
+            if is_active == 0:
+                ai_comments.append("⚠️ **Passiv Hesab Statusu:** Müştərinin bank hesabı üzrə aktivlik indeksi aşağıdır.")
+                ai_actions.append("💡 Müştərini aktivləşdirmək üçün xüsusi bildiriş və hədiyyə bonus verilməlidir.")
 
             if not ai_comments:
                 ai_comments.append("🌟 **Mükəmməl Müştəri Profili:** Müştərinin balansı və əməliyyat aktivliyi yüksəkdir.")
