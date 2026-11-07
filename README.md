@@ -1,8 +1,8 @@
-# 🏦 Bank Customer Churn Analytics & AI Prediction Portal
-
 <p align="center">
   <img src="images/banner.jpg" alt="Bank Customer Churn Analytics & AI Portal Banner" width="100%" />
 </p>
+
+# 🏦 Bank Customer Churn Analytics & AI Prediction Portal
 
 ---
 
@@ -80,6 +80,10 @@ Layihə məlumatların SQL-də Medallion arxitekturası üzrə işlənməsindən
 ---
 
 ## 🔄 Layihənin İş Mərhələləri
+
+<p align="center">
+  <img src="images/project_workflow.png" alt="End-to-End Data Analytics Workflow" width="100%" />
+</p>
 
 ### 1. Data Engineering Və Məlumatların Hazırlanması
 
