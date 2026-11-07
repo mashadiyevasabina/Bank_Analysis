@@ -100,8 +100,9 @@ with tab2:
     
     with col_in1:
         credit_score = st.number_input("Kredit Skoru (Credit Score)", min_value=300, max_value=850, value=650)
-        gender = st.selectbox("Cins", ["male", "female"])
-        city = st.selectbox("Şəhər", ["Baku", "Ganja", "Sumqayit"])
+        # Modelin Train datasına tam uyğunlaşdırılmış kateqoriyalar
+        gender_raw = st.selectbox("Cins", ["Kişi", "Qadın"])
+        city_raw = st.selectbox("Şəhər", ["Bakı", "Gənclik / Gəncə", "Sumqayıt"])
         age = st.number_input("Müştərinin Yaşı", min_value=18, max_value=90, value=42)
 
     with col_in2:
@@ -116,7 +117,7 @@ with tab2:
         trans_count = st.number_input("Tranzaksiya Sayı", min_value=1, value=12)
         trans_amount = st.number_input("Ümumi Tranzaksiya Məbləği (AZN)", min_value=0.0, value=850.0)
 
-    # Qoşulmuş əlavə parametrlər
+    # Əlavə parametrlər
     st.markdown("#### ⚙️ Əlavə Kredit və Tranzaksiya Parametrləri")
     col_add1, col_add2, col_add3 = st.columns(3)
     with col_add1:
@@ -128,6 +129,15 @@ with tab2:
 
     avg_trans = trans_amount / trans_count if trans_count > 0 else 0.0
 
+    # Şəhər və Cinsiyyət adlarının təmizlənməsi (Model məhz "Bakı", "Gəncə", "Sumqayıt", "Qadın", "Kişi" gözləyir)
+    city_map = {
+        "Bakı": "Bakı",
+        "Gənclik / Gəncə": "Gəncə",
+        "Sumqayıt": "Sumqayıt"
+    }
+    city = city_map.get(city_raw, "Bakı")
+    gender = gender_raw
+
     st.divider()
     
     if st.button("🚀 Müştəri Riskini Və AI Rəyini Hesabla", type="primary"):
@@ -138,24 +148,24 @@ with tab2:
             my_bar.progress(percent_complete + 1, text=progress_text)
         my_bar.empty()
 
-        # Modelin gözlədiyi BÜTÜN (Orijinal + Feature Engineered) Sütunlar
+        # Modelin gözlədiyi dəqiq sütunlar və verilənlər dəsti
         input_df = pd.DataFrame([{
-            "credit_score": credit_score,
-            "gender": gender,
-            "city": city,
             "age": age,
             "tenure_years": tenure_years,
+            "credit_score": credit_score,
             "balance": balance,
+            "salary": salary,
             "products_count": products_count,
             "has_card": has_card,
             "is_active": is_active,
-            "salary": salary,
             "total_trans_count": trans_count,
             "total_trans_amount": trans_amount,
             "avg_trans_amount": avg_trans,
             "holiday_trans_ratio": holiday_ratio,
             "total_loan_count": total_loans,
-            "rejected_loan_count": rejected_loans
+            "rejected_loan_count": rejected_loans,
+            "gender": gender,
+            "city": city
         }])
 
         if model is not None:
@@ -191,7 +201,7 @@ with tab2:
             ai_actions = []
 
             if balance < 2000:
-                ai_comments.append("📉 **Aşağı Balans Riski:** Müştərinin hesab balansı kritik həddən aşağıdır. Passivliyə keçid siqnalıdır.")
+                ai_comments.append("📉 **Aşağı Balans Riski:** Müştərinin hesab balansı kritik həddən aşağıdır (2,000 AZN-dən az). Passivliyə keçid siqnalıdır.")
                 ai_actions.append("💡 Müştəriyə +0.5% dərəcəli depozit hesabı və pulsuz kart xidməti təklif edin.")
                 
             if rejected_loans > 0:
@@ -199,11 +209,15 @@ with tab2:
                 ai_actions.append("💡 Kredit müraciətinə yenidən baxılıb yumşaq şərtli İstehlak krediti təklif oluna bilər.")
                 
             if trans_count < 15:
-                ai_comments.append("😴 **Tranzaksiya Passivliyi:** Müştəri son dövrdə kartdan az istifadə edir.")
+                ai_comments.append("😴 **Tranzaksiya Passivliyi:** Müştəri kartdan az istifadə edir.")
                 ai_actions.append("💡 Partner şəbəkələrində 2x Cashback kampaniyası göndərilməlidir.")
 
+            if credit_score < 500:
+                ai_comments.append("🛑 **Kritik Kredit Skoru:** Müştərinin kredit skoru olduqca aşağıdır (500-dən aşağı).")
+                ai_actions.append("💡 Maliyyə sağlamlığı məsləhəti və girovlu kredit məhsulları tövsiyə edin.")
+
             if is_active == 0:
-                ai_comments.append("⚠️ **Passiv Hesab Statusu:** Müştərinin bank hesabı üzrə aktivlik indeksi aşağıdır.")
+                ai_comments.append("⚠️ **Passiv Hesab Statusu:** Müştərinin bank hesabı üzrə aktivlik indeksi 0-dır.")
                 ai_actions.append("💡 Müştərini aktivləşdirmək üçün xüsusi bildiriş və hədiyyə bonus verilməlidir.")
 
             if not ai_comments:
