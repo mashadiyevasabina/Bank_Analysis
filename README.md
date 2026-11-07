@@ -37,6 +37,10 @@ Layihə məlumatların SQL-də Medallion arxitekturası üzrə işlənməsindən
 
 ## 📊 Əsas KPI-lar (Key Performance Indicators)
 
+<p align="center">
+  <img src="images/dashboard.png" alt="Power BI Customer Churn Analytics Dashboard" width="100%" />
+</p>
+
 | İstiqamət | KPI-lar | Biznes Məqsədi |
 | --- | --- | --- |
 | **Kredit Proqnozu (ML & Streamlit)** | Proqnozlaşdırılan kredit sayı, filiallar üzrə gözlənilən kredit tələbi | Kredit tələbatını və satış həcmini öncədən planlaşdırmaq |
