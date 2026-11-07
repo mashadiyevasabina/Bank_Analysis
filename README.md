@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/banner.jpg" alt="Bank Customer Churn Analytics & AI Portal Banner" width="100%" />
+  <img src="images/Banner.jpg" alt="Bank Customer Churn Analytics & AI Portal Banner" width="100%" />
 </p>
 
 # 🏦 Bank Customer Churn Analytics & AI Prediction Portal
