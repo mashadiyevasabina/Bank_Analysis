@@ -1,165 +1,8 @@
-
-
 # 🏦 Bank Customer Churn Analytics & AI Prediction Portal
 
-
-
-## 🏦 Layihə Haqqında
-
-Bu layihə bank məlumatlarının **End-to-End Data Analytics** yanaşması ilə analiz edilməsinə yönəlmişdir.
-
-Əsas məqsəd müştəri davranışını anlamaq, bankı tərk etmə riskini müəyyənləşdirmək, kredit müraciətlərində itirilən imkanları aşkar etmək və biznes qərarlarını məlumatlar əsasında dəstəkləməkdir.
-
-Layihə çərçivəsində:
-
-- **SQL və Python** ilə məlumatlar təmizlənmiş, birləşdirilmiş və analiz üçün hazırlanmışdır.
-- **EDA və statistik analiz** vasitəsilə müştəri tranzaksiyalarına təsir edən faktorlar araşdırılmışdır.
-- **Power BI** ilə müştəri itkisi və kredit müraciətləri üzrə interaktiv dashboardlar hazırlanmışdır.
-- **Machine Learning** ilə bankı tərk etmə riski olan müştəriləri müəyyənləşdirən proqnoz modeli qurulmuşdur.
-- **Streamlit** vasitəsilə analitik nəticələrin interaktiv təqdimatı üçün tətbiq hazırlanmışdır.
-
-**Layihənin əsas hədəfi:** Xam bank məlumatlarını biznes üçün faydalı insight-lara və qərarverməni dəstəkləyən analitik həllərə çevirmək.
-
-## 📌 Biznes Dəyəri
-
-Bank sektorunda yeni müştəri cəlb etmək, mövcud müştərini saxlamaqdan (**Customer Retention**) 5 dəfə daha baha başa gəlir. Müştərilərin bankı tərk etməsi (**Churn**) maliyyə itkilərinə və bazar payının azalmasına birbaşa təsir göstərir.
-
-**Bank Customer Churn Analytics & AI Portal** layihəsi müştərilərin tranzaksiya, balans, kredit və demoqrafik göstəricilərini təhlil edən, Churn riskini öncədən proqnozlaşdıran və **avtomatik biznes qərarları (Retention Plan)** yaradan **End-to-End Analitik Platformadır**.
-
----
-
-### 📂 Dataset Haqqında
-
-Layihədə **2026-cı ilin yanvar–iyun aylarını** əhatə edən bank məlumatlarından istifadə edilmişdir.
-
-**Əsas datasetlər:**
-- **Customers:** 5,000 müştəri — yaş, maaş, balans, kredit skoru və churn məlumatları.
-- **Loans:** 4,820 kredit müraciəti — kredit məbləği, növü, statusu və rədd səbəbləri.
-- **Transactions:** 77,396 tranzaksiya — tarix, məbləğ, valyuta, kateqoriya və əməliyyat kanalı.
-
-**Əlavə məlumat mənbələri:**
-- **Open-Meteo API:** 7 şəhər üzrə hava məlumatları.
-- **Frankfurter API:** USD və EUR valyuta məzənnələri.
-- **Calendar Reference:** Bayram, həftəsonu və iş günləri haqqında məlumatlar.
-
-Bu məlumatlar SQL bazasında birləşdirilərək təmizləmə, statistik analiz, Power BI və Machine Learning mərhələlərində istifadə edilmişdir.
-
-
-## 📊 Əsas KPI-lar (Key Performance Indicators)
-
-Layihədə bankın fəaliyyətini və müştəri davranışını qiymətləndirmək üçün aşağıdakı əsas göstəricilər müəyyən edilmişdir:
-
-| İstiqamət | KPI-lar |
-|---|---|
-| **Kredit proqnozu (ML & Streamlit)** | Gələn ay üçün proqnozlaşdırılan kredit sayı, filiallar üzrə gözlənilən kredit tələbi |
-| **Müştəri itkisi (Power BI)** | Churn Rate (%), risk altında olan müştəri sayı, Retention Rate (%) |
-| **Kredit müraciətləri (Power BI)** | Approval Rate (%), Rejection Rate (%), Conversion Rate (%) |
-| **Müştəri davranışı (Statistik analiz)** | Gündəlik tranzaksiya sayı, gündəlik tranzaksiya məbləği (AZN), Average Ticket (AZN), bayram və maaş dövrü üzrə aktivlik fərqi (%) |
-
-**Məqsəd:** Kredit tələbatını proqnozlaşdırmaq, müştəri itkisini izləmək, kredit satışındakı problemləri müəyyən etmək və tranzaksiya davranışını qiymətləndirmək.
-
-
-- **Machine Learning:** Random Forest modeli riskli müştərilərin 78.5%-ni müəyyən edə bilir.
-
-**Biznes məqsədi:** Müştəri itkisini azaltmaq, kredit satışındakı itirilmiş imkanları müəyyən etmək və bankın qərarvermə prosesini data əsaslı analizlə dəstəkləmək.
-
-## 📊 Məlumat Analitikası Layihəsinin İş Axını
-
-Layihə akademik tələblərə uyğun olaraq aşağıdakı mərhələlər üzrə qurulmuşdur:
-![End-to-End Data Analytics Workflow](İmages/project_workflow.png)
-
-
-### 🧹 Data Cleaning (Silver Layer)
-
-Bronze mərhələsində birləşdirilmiş kredit, müştəri və tranzaksiya məlumatları **Python (Pandas)** vasitəsilə təmizlənərək analiz üçün hazırlanmışdır.
-
-- **Data tipləri:** Tarix və rəqəmsal sütunlar uyğun formatlara çevrilmişdir.
-- **Standartlaşdırma:** Mətnlər kiçik hərflərə çevrilmiş, artıq boşluqlar təmizlənmişdir.
-- **Dublikatlar:** Kredit məlumatlarında 15 təkrarlanan sətir silinmişdir.
-- **Boş dəyərlər:** Kredit statusuna uyğun boş dəyərlər araşdırılmış, çatışmayan faiz dərəcələri məhsul növünə görə medianla doldurulmuşdur.
-- **Valyuta məzənnələri:** AZN əməliyyatları üçün boş məzənnələr `1` ilə əvəz edilmişdir.
-- **Nəticə:** Təmizlənmiş məlumatlar SQL Server-in `silver` sxeminə və CSV fayllarına yazılmışdır.
-
-
-
-1. **📊 Statistik Analiz & EDA:** Müştəri davranışlarındakı anomaliyaları, makro-iqtisadi təsirləri və statistik hipotezləri yoxlamaq.
-2. **📈 Power BI Dashboard:** Filiallar, kredit müraciətləri və tranzaksiya dinamikasını biznes vizualları ilə təqdim etmək.
-3. **🤖 Machine Learning & AI Portal:** Random Forest modeli ilə Churn ehtimalını proqnozlaşdırmaq və **AI Risk Konsultant** mühərriki vasitəsilə avtomatik tövsiyələr generatorunu işə salmaq.
-
----
-
-## 📊 Statistik Analiz Və Hipotez Testləri (Statistical Analysis)
-
-Bank müştərilərinin tranzaksiya davranışının bayram günləri, ehtimal olunan maaş dövrü, valyuta məzənnələri (USD/EUR) və hava temperaturu ilə əlaqəsi dərindən araşdırılmışdır.
-
-> 📉 **Təhlil Məlumat Dəsti:** **77,396 tranzaksiya və 181 günlük dinamik məlumat** əsasında aparılmışdır.
-> 🛠️ **İstifadə Olunan Statistik Metodlar:** Exploratory Data Analysis (EDA), Shapiro–Wilk Normallıq Testi, Welch t-test, Spearman Correlation və Multiple Linear Regression.
-
-### 🔍 Əsas Statistik Nəticələr (Key Findings):
-
-* 🎈 **Bayram Günləri Təsiri:** İş günlərinə nisbətən bayram günlərində tranzaksiya sayı **8.4%**, ümumi məbləğ isə **33% aşağıdır**. Lakin tranzaksiya sayındakı fərq statistik əhəmiyyətlilik həddinə çatmamışdır ($p > 0.05$).
-* 💰 **Maaş Dövrü Təsiri:** Ehtimal olunan maaş günlərində (digər günlərlə müqayisədə) tranzaksiya sayı **28.4%**, tranzaksiya məbləği isə **25.4% yüksəkdir**. Hər iki fərq statistik olaraq tam əhəmiyyətlidir ($p < 0.01$).
-* 💱 **Valyuta Məzənnəsi (USD / EUR):** USD kursu ilə tranzaksiya göstəriciləri arasında xətti əlaqə tapılmamışdır. EUR kursu artdıqda isə tranzaksiya sayı və məbləği arasında **zəif mənfi korrelyasiya** müşahidə edilmişdir.
-* 🌡️ **Hava Temperaturu Təsiri:** İlkin təhlildə temperatur yüksəldikcə tranzaksiya həcminin azalmağa meyilli olduğu görünürdü. Lakin aylar və gün tipləri (regressiya modelinə) nəzərə alındıqda, temperaturun birbaşa əlaqəsi statistik əhəmiyyətini itirmişdir.
-
-> 🖼️ *Statistik Analiz Qrafikləri:* `notebooks/3_Gold/06_Statistics_EDA.ipynb` daxilində tam parametrik vizuallarla sənədləşdirilmişdir.
-
----
-
-## 🏗️ Data Architecture (Bronze — Silver — Gold)
-
-Məlumatların emalı modern data mühəndisliyi prinsiplərinə uyğun olaraq 3 qatlı (**Medallion Architecture**) SQL/Data çərçivəsində həyata keçirilmişdir:
-
-| Qat (Layer) | Təsvir Və Məzmun |
-| --- | --- |
-| 🥉 **Bronze Layer** | Bank sistemindən gələn ilkin, işlənməmiş ham (raw) müştəri tranzaksiya və kredit dataları. |
-| 🥈 **Silver Layer** | Təmizlənmiş, deduplikasiya olunmuş, tipləri düzəldilmiş və kənar qiymətlərdən (outliers) təmizlənmiş data. |
-| 🥇 **Gold Layer** | Statistik analitikaya, Power BI dashboard-larına və ML təliminə hazır aqreqasiya olunmuş cədvəllər (`gold_churn_predictions.csv`). |
-
----
-
-## 🛠️ İstifadə Olunan Texnologiya Steki
-
-| Kateqoriya | Texnologiyalar |
-| --- | --- |
-| **Dillər & Mühit** | Python 3.14, Jupyter Notebook, GitHub Codespaces |
-| **Data Manipulyasiyası** | Pandas, NumPy, Scikit-Learn (Pipeline, ColumnTransformer) |
-| **Statistika & Math** | SciPy, Statsmodels, Descriptive & Inferential Statistics |
-| **Machine Learning** | Random Forest Classifier, Class Weight Balancing, Threshold Tuning |
-| **Vizuallaşdırma & BI** | Power BI Desktop, Matplotlib, Seaborn |
-| **Veb İnterfeys (App)** | Streamlit (Dark Theme, Progress Bar, Metrics, Interactive Tabs) |
-| **Model Serialization** | Joblib (`.pkl` artefaktları) |
-
----
-
-## 🔮 Machine Learning & Biznes Həddinin (Threshold) Optimallaşdırılması
-
-* **Əsas Alqoritm:** Random Forest Classifier (200 Trees)
-* **Data Leakage-Free:** Bütün transformasiyalar (StandardScaler, OneHotEncoder) yalnız `Train` dəstinə fit olunaraq data sızmasının qarşısı 100% alınmışdır.
-* **Optimal Biznes Həddi (Threshold = 0.35):** Standart `0.50` həddi bank üçün riskli müştəriləri qaçırdığı üçün, ROC-PR əyrisi üzərindən hədd `0.35`-ə endirilmiş və gedə biləcək müştəriləri tutma nisbəti (**Recall**) **78.5%**-ə yüksəldilmişdir.
-
-| Metrika | Qiymət | Biznes Mənası |
-| --- | --- | --- |
-| **ROC-AUC** | `0.8410` | Modelin riski fərqləndirmə qabiliyyəti yüksəkdir. |
-| **Recall (Gedənləri Tutma)** | `78.5%` | Riskli müştərilərin böyük əksəriyyəti öncədən təyin edilir. |
-| **Precision** | `52.3%` | Hədəflənən retention kampaniyalarının dəqiqliyi. |
-
----
-
-## 🤖 Special Feature: AI Risk Consultant Engine
-
-Streamlit tətbiqinə inteqrasiya edilmiş **AI Risk Konsultant** mühərriki daxil edilən müştəri parametrlərini (balans, rədd edilən kreditlər, tranzaksiya sayı, aktivlik) anlıq təhlil edərək avtomatik şərh və retention strategiyası generasiya edir:
-### 💡 Əsas Biznes Insight-ları
-
-- **Müştəri itkisi:** Müştərilərin 20.16%-i bankı tərk edib. Qeyri-aktiv müştərilərdə bu göstərici daha yüksəkdir.
-- **Kredit müraciətləri:** Müraciətlərin 38%-i rədd edilir. Əsas rədd səbəbləri arasında yüksək borc yükü və aşağı kredit skoru yer alır.
-- **Statistik analiz:** Maaş dövründə tranzaksiya aktivliyi artır, bayram günlərində isə iş günlərinə nisbətən ümumi tranzaksiya məbləği azalır.
-
-> 💡 **Nümunə AI Çıxarışı:**
-> * 📉 **Aşağı Balans Riski:** Hesab balansı kritik həddən aşağıdır $\rightarrow$ *Tövsiyə: +0.5% dərəcəli depozit təklif edin.*
-> * ⚠️ **Kredit Narazılığı:** 1 rədd edilmiş müraciət var $\rightarrow$ *Tövsiyə: İstehlak kreditinə güzəştli şərtlərlə yenidən baxın.*
-> 
-> 
+<p align="center">
+  <img src="images/banner.jpg" alt="Bank Customer Churn Analytics & AI Portal Banner" width="100%" />
+</p>
 
 ---
 
@@ -171,21 +14,185 @@ Try the Bank Customer Churn Risk Predictor application live:
 
 ---
 
+## 📌 Layihə Haqqında
 
+Bank sektorunda yeni müştəri cəlb etmək, mövcud müştərini saxlamaqdan (**Customer Retention**) 5 dəfə daha baha başa gəlir. Müştərilərin bankı tərk etməsi (**Churn**) maliyyə itkilərinə və bazar payının azalmasına birbaşa təsir göstərir.
+
+**Bank Customer Churn Analytics & AI Portal** bank verilənlərinin təhlili, tarixi makro-iqtisadi və hava şəraiti göstəriciləri ilə zənginləşdirilməsi, statistik araşdırmaların aparılması və müştəri itkisinin öncədən proqnozlaşdırılması üçün Machine Learning modellərinin hazırlanmasını əhatə edən **End-to-End Data Analytics** layihəsidir.
+
+Layihə məlumatların SQL-də Medallion arxitekturası üzrə işlənməsindən başlayaraq statistik təhlil, xüsusiyyətlərin yaradılması (Feature Engineering), proqnozlaşdırıcı modellərin qurulması və canlı AI veb-portalının təqdim edilməsinə qədər olan bütöv mərhələləri əhatə edir.
 
 ---
 
-## 🚀 Proyekti Yerli Mühitdə İşə Salmaq
+## 🎯 Layihənin Məqsədləri
 
-Tətbiqi lokal mühitdə başlatmaq üçün terminalda aşağıdakı əmrləri icra edin:
+* Müştərilərin bankı tərk etmə (**Churn**) riskini öncədən proqnozlaşdırmaq.
+* Müştəri tranzaksiyalarına təsir edən makro-iqtisadi, təqvim və hava şəraiti faktorlarını statistik testlərlə araşdırmaq.
+* Kredit müraciətlərində rədd cavabı alan müştərilərin Churn riski ilə əlaqəsini təhlil etmək.
+* Disbalanslı data mühitində biznes maraqlarına uyğun optimal decision threshold (qərar həddi) təyin etmək.
+* Filiallar, kredit satışı və tranzaksiya dinamikasını Power BI dashboard-ları vasitəsilə vizuallaşdırmaq.
+* Streamlit üzərində bank menecerləri üçün avtomatik **AI Risk Consultant Engine** (Retention Plan) generatoru təqdim etmək.
 
-```bash
-# 1. Repozitoriyanı klonlayın
-git clone https://github.com/sabina-DataCube2026/Bank_Analysis.git
-cd Bank_Analysis
+---
 
-# 2. Lazımi kitabxanaları quraşdırın
-pip install -r app/requirements.txt
+## 📊 Əsas KPI-lar (Key Performance Indicators)
 
-# 3. Streamlit tətbiqini işə salın
-python -m streamlit run app/main.py
+| İstiqamət | KPI-lar | Biznes Məqsədi |
+| --- | --- | --- |
+| **Kredit Proqnozu (ML & Streamlit)** | Proqnozlaşdırılan kredit sayı, filiallar üzrə gözlənilən kredit tələbi | Kredit tələbatını və satış həcmini öncədən planlaşdırmaq |
+| **Müştəri İtkisi (Power BI)** | Churn Rate (%), Risk altında olan müştəri sayı, Retention Rate (%) | Müştəri itkisini izləmək və riskli müştəriləri vaxtında tutmaq |
+| **Kredit Müraciətləri (Power BI)** | Approval Rate (%), Rejection Rate (%), Conversion Rate (%) | Kredit satışındakı dar boğazları və rədd olunma səbəblərini müəyyən etmək |
+| **Müştəri Davranışı (Statistika)** | Gündəlik tranzaksiya sayı/məbləği (AZN), Average Ticket (AZN), Bayram və Maaş dövrü aktivlik fərqi (%) | Müştərinin maliyyə ritmini və xərcləmə vərdişlərini qiymətləndirmək |
+
+---
+
+## 🛠️ İstifadə Olunan Texnologiyalar
+
+| Texnologiya | İstifadə Məqsədi |
+| --- | --- |
+| **Python (3.14)** | Məlumatların emalı, təhlili, pipeline arxitekturası və modelləşdirmə |
+| **Pandas & NumPy** | Data manipulyasiyası, valyuta çevrilmələri, aqreqasiya və təmizləmə |
+| **SQL Server** | Məlumatların Medallion arxitekturası (Bronze-Silver-Gold) üzrə saxlanılması |
+| **Jupyter Notebook** | Exploratory Data Analysis (EDA) və statistik təhlillərin sənədləşdirilməsi |
+| **SciPy & Statsmodels** | Hipotez testləri (Welch t-test, Shapiro-Wilk, Spearman Correlation, Linear Regression) |
+| **Scikit-Learn** | ML modellərinin qurulması, ColumnTransformer, Pipeline və Threshold Optimization |
+| **Power BI Desktop** | İcraçı rəhbərlik üçün interaktiv vizuallaşdırma və biznes dashboard-ları |
+| **Streamlit** | Canlı interaktiv veb-portal və AI Risk Consultant mühərrikinin təqdim olunması |
+| **Joblib** | ML modelinin və optimal biznes həddinin (`.pkl`) seriallaşdırılması |
+| **Git & GitHub** | Versiyaların idarə edilməsi və Streamlit Cloud avtomatik deployment (CI/CD) |
+
+---
+
+## 📂 Məlumat Mənbələri
+
+### 1. Bank daxili datasetlər (2026-cı il yanvar–iyun)
+
+* **Customers (5,000 müştəri):** Yaş, cinsiyyət, şəhər, hesabdakı balans, illik gəlir, kredit skoru, istifadə etdiyi məhsul sayı və Churn statusu.
+* **Loans (6,876 müraciət):** Kredit ID-si, müştəri ID-si, müraciət məbləği, statusu (*Təsdiqləndi / Rədd edildi*) və rədd səbəbləri.
+* **Transactions (77,396 tranzaksiya):** Əməliyyat ID-si, məbləğ, valyuta (AZN, USD, EUR), əməliyyat tarixi və bayram günü göstəricisi (`is_holiday`).
+
+### 2. Xarici zənginləşdirmə data mənbələri (External APIs)
+
+* **Open-Meteo API:** Şəhərlər üzrə tarixi hava temperaturu və meteoroloji göstəricilər.
+* **Frankfurter API:** USD/AZN və EUR/AZN valyuta məzənnələrinin dinamik tarixçəsi.
+* **Calendar Reference:** İş, həftəsonu, bayram və ehtimal olunan maaş günləri haqqında təqvim məlumatları.
+
+---
+
+## 🔄 Layihənin İş Mərhələləri
+
+### 1. Data Engineering Və Məlumatların Hazırlanması
+
+* Relasiyalı verilənlər bazasındakı dağınıq cədvəllər `customer_id` açarı üzrə tək müştəri oxuna (1 Row Per Customer) gətirilmişdir.
+* Foreign currency (USD, EUR) tranzaksiyaları dinamik məzənnə ilə vahid AZN ekvivalentinə çevrilmişdir.
+* Müştəri narazılığını ölçmək üçün rədd edilmiş kredit sayı (`rejected_loan_count`) və orta xərcləmə məbləğləri yeni əlamət (Feature Engineering) kimi yaradılmışdır.
+
+### 2. SQL Server Arxitekturası (Medallion Architecture)
+
+Layihədə məlumatların mərhələli emalı üçün modern 3 qatlı yanaşmadan istifadə olunmuşdur:
+
+| Qat (Layer) | Təyinatı |
+| --- | --- |
+| 🥉 **Bronze Layer** | Bank sistemindən gələn ilkin, işlənməmiş xam (raw) müştəri, tranzaksiya və kredit məlumatları. |
+| 🥈 **Silver Layer** | Təmizlənmiş, deduplikasiya olunmuş, tipləri düzəldilmiş və kənar qiymətlərdən təmizlənmiş data. |
+| 🥇 **Gold Layer** | Statistik analitikaya, Power BI dashboard-larına və ML təliminə hazır aqreqasiya olunmuş cədvəl (`gold_churn_predictions.csv`). |
+
+### 3. Exploratory Data Analysis (EDA)
+
+* Müştərilərin 20.16%-nin bankı tərk etdiyi (Churn Rate) müəyyən edilmişdir.
+* Hesab balansı sıfıra yaxın olan və kredit müraciəti rədd edilən müştərilərdə Churn riskinin kəskin yüksəldiyi müşahidə olunmuşdur.
+* Yaş və xərcləmə meylləri üzrə paylanmalar (distributions) və kənar qiymətlər (outliers) təhlil edilmişdir.
+
+### 4. Statistik Təhlil Və Hipotez Testləri
+
+* **Bayram Günləri Təsiri:** İş günlərinə nisbətən bayram günlərində tranzaksiya məbləği 33% aşağıdır. Lakin tranzaksiya sayındakı fərq statistik əhəmiyyətlilik həddinə çatmamışdır ($p > 0.05$).
+* **Maaş Dövrü Təsiri:** Ehtimal olunan maaş günlərində tranzaksiya sayı **28.4%**, tranzaksiya məbləği isə **25.4% yüksəkdir**. Hər iki fərq statistik olaraq tam əhəmiyyətlidir ($p < 0.01$).
+* **Valyuta Məzənnəsi (USD/EUR):** EUR kursu artdıqda tranzaksiya həcmi arasında zəif mənfi korrelyasiya müşahidə olunmuşdur.
+* **Hava Temperaturu Təsiri:** Reqressiya modelinə mövsümilik (aylar) əlavə edildikdə temperaturun birbaşa effekti statistik əhəmiyyətini itirmişdir ($p > 0.05$).
+
+### 5. Feature Engineering
+
+* `total_trans_count` & `total_trans_amount`: Aktivlik və həcm göstəriciləri.
+* `avg_trans_amount`: Bir dəfəyə xərclənən orta səbət məbləği.
+* `holiday_trans_ratio`: Bayram günlərindəki xərcləmə payı.
+* `rejected_loan_count`: Bankdan narazılıq indikatoru.
+
+### 6. Machine Learning Və Biznes Həddinin (Threshold) Optimallaşdırılması
+
+Müştəri itkisi ikili təsnifat (Binary Classification) məsələsi kimi modelləşdirilmişdir:
+
+* **Hədəf dəyişən (`churned`):** `1` — Müştəri bankı tərk edir, `0` — Bankda qalır.
+* **Data Leakage-Free:** Transformation addımları (`StandardScaler`, `OneHotEncoder`) yalnız `Train` dəstinə fit olunmuşdur.
+* **Class Imbalance:** Random Forest modelində `class_weight='balanced'` parametrindən istifadə edilmişdir.
+* **Threshold Tuning ($0.50 \rightarrow 0.35$):** Bank üçün gedəcək müştərini qaçırmaq (False Negative) daha zərərli olduğu üçün decision threshold **$0.35$-ə endirilmiş** və gedəcək müştəriləri tutma nisbəti (**Recall**) **78.5%**-ə yüksəldilmişdir.
+
+---
+
+## 📊 İlkin Analitik Nəticələr
+
+* **ROC-AUC Balı:** `0.8410` (Modelin riski ayırt etmə qabiliyyəti yüksəkdir).
+* **Recall (Gedənləri Tutma Faizi):** `78.5%` (Real gedəcək müştərilərin böyük əksəriyyəti öncədən təyin edilir).
+* **Precision:** `52.3%` (Hədəflənən retention kampaniyalarının dəqiqliyi).
+* **Maaş Günləri Aktivliyi:** Maaş günlərində kart əməliyyatlarının həcmi statistik əhəmiyyətli dərəcədə artır ($p < 0.01$).
+
+---
+
+## 📊 Biznes Insight-ları və Tövsiyələr
+
+### 1. Müştəri İtkisi (Churn) & Balans Riski 📉
+
+**Insight:**
+
+* Müştərilərin 20.16%-i bankı tərk edir. Hesab balansı kritik həddən (2,000 AZN) aşağı olan müştərilərdə Churn meyli 3 dəfə yüksəkdir.
+
+**Biznes Tövsiyələri:**
+
+* Balansı düşən müştərilərə avtomatik +0.5% dərəcəli depozit hesabı və ya pulsuz kart xidməti təklif etmək.
+* Müştəri hesabında passivlik yarandıqda stimullaşdırıcı kəşbek kampaniyaları işə salmaq.
+
+### 2. Kredit Müraciətləri Narazılığı & Rədd Səbəbləri ⚠️
+
+**Insight:**
+
+* Kredit müraciəti rədd edilən müştərilər bankdan incəyərək hesablarını bağlamağa daha meyllidir (`rejected_loan_count` Top 10 Churn faktorları arasındadır).
+
+**Biznes Tövsiyələri:**
+
+* Rədd cavabı alan müştəriyə dərhal imtina vermək əvəzinə, daha kiçik həcmli və ya girovlu yumşaq alternativ kredit məhsulları təklif etmək.
+* Kredit müraciəti rədd edilən riskli müştəriləri CRM sistemində xüsusi izləməyə götürmək.
+
+### 3. Tranzaksiya Aktivliyi (Maaş Və Bayram Dövrü) 💰
+
+**Insight:**
+
+* Maaş günlərində tranzaksiya həcmi 28.4% artır, bayram günlərində isə əməliyyatlar azalır.
+
+**Biznes Tövsiyələri:**
+
+* Marketing bildirişlərini və kredit təkliflərini məhz maaş dövründən 1-2 gün əvvəl göndərmək.
+* Bayram günlərində ticarət tərəfdaşları ilə birlikdə xüsusi bədəlli kampaniyalar keçirmək.
+
+### 4. Proqnozlaşdırıcı AI Və Qərarvermə (AI Risk Consultant Engine) 🤖
+
+**Insight:**
+
+* Streamlit portala inteqrasiya edilmiş AI mühərriki müştərinin risk profilini anlıq təhlil edərək avtomatik **Retention Plan** yaradır.
+
+**Biznes Tövsiyələri:**
+
+* Filial menecerlərinin gündəlik iş prosesinə AI Risk Konsultantının tövsiyələrini inteqrasiya etmək.
+* Power BI dashboard-ları vasitəsilə filiallar üzrə riskli müştəri siyahılarını canlı izləmək.
+
+---
+
+## 🎯 Gözlənilən Biznes Faydaları
+
+| İstiqamət | Gözlənilən Fayda |
+| --- | --- |
+| **Müştəri Retention** | Gedəcək müştərilərin 78.5%-ni öncədən müəyyən edərək saxlamaq |
+| **Maliyyə Səmərəliliyi** | Yeni müştəri cəlb etmə xərclərinə (CAC) 5 dəfəyə qədər qənaət etmək |
+| **Kredit Satışı** | Rədd edilmiş müraciətləri alternativ məhsullara yönəldərək konversiyanı artırmaq |
+| **Əməliyyat Effektivliyi** | Filial menecerlərinin AI tövsiyələri ilə daha sürətli qərar verməsini təmin etmək |
+| **Data-Driven Qərarlar** | Subyektiv mülahizələr əvəzinə statistik və ML modellərinə əsaslanmaq |
+
+---
