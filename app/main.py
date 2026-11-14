@@ -1,9 +1,11 @@
 import time
 import joblib
+import json
 from pathlib import Path
 import pandas as pd
 import numpy as np
 import streamlit as st
+
 
 # 1. SƏHİFƏ PARAMETRLƏRİ
 st.set_page_config(
@@ -28,6 +30,20 @@ def load_ml_model():
 
 model, OPTIMAL_THRESHOLD = load_ml_model()
 
+@st.cache_data
+def load_model_metrics():
+    metrics_path = MODELS_DIR / "evaluation_metrics.json"
+
+    if not metrics_path.exists():
+        return None
+
+    with open(metrics_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+model_metrics = load_model_metrics()
+
+
 # 2. BAŞLIQ VƏ SIDEBAR
 st.title("🏦 Bank Analitikası və AI Churn Risk Portalı")
 st.caption("Filiallar üzrə analitika, Machine Learning proqnozlaşdırılması və Avtomatik AI Şərh Mühərriki")
@@ -50,10 +66,12 @@ with st.sidebar:
     st.info("💡 Bank Analytics & AI Capstone Project")
 
 # 3. TABS
-tab1, tab2, tab3 = st.tabs([
+tab1, tab2, tab3, tab4 = st.tabs([
     "📊 Filial Analitikası", 
     "🔮 Müştəri Churn Simulyatoru & AI Konsultant", 
+    "📈 Kredit Satış Proqnozu",
     "⚙️ Model Metrikaları"
+    
 ])
 
 # =========================================================
@@ -61,6 +79,7 @@ tab1, tab2, tab3 = st.tabs([
 # =========================================================
 with tab1:
     st.header(f"📈 Filial Performansı: {selected_branch}")
+
     
     m1, m2, m3, m4 = st.columns(4)
     m1.metric(label="Aylıq Tranzaksiya Həcmi", value="4.2M AZN", delta="14.2%")
@@ -167,15 +186,14 @@ with tab2:
             "gender": gender,
             "city": city
         }])
-
         if model is not None:
             churn_proba = model.predict_proba(input_df)[0, 1]
         else:
-            churn_proba = 0.20
-            if balance < 2000: churn_proba += 0.25
-            if rejected_loans > 0: churn_proba += 0.20
-            if trans_count < 15: churn_proba += 0.15
-            churn_proba = min(churn_proba, 0.95)
+                st.error(
+                    "ML modeli tapılmadı. Churn ehtimalını hesablamaq mümkün deyil."
+                )
+                st.stop()
+
 
         is_risk = churn_proba >= OPTIMAL_THRESHOLD
 
@@ -192,10 +210,17 @@ with tab2:
             if is_risk:
                 st.error(f"🚨 SƏVİYYƏ: RİSKLİ (Hədd: {OPTIMAL_THRESHOLD})")
             else:
-                st.success(f"✅ SƏVİYYƏ: SADIQ MÜŞTƏRİ (Hədd: {OPTIMAL_THRESHOLD})")
+                st.success(f"✅ SƏVİYYƏ: NORMAL CHURN RİSKİ (Hədd: {OPTIMAL_THRESHOLD})")
 
         with res_col2:
             st.subheader("🤖 AI Risk Konsultantın Avtomatik Şərhi")
+
+            st.caption(
+    "Churn ehtimalı Random Forest modeli ilə hesablanır. "
+    "Aşağıdakı risk faktorları və retention tövsiyələri isə "
+    "əvvəlcədən müəyyən edilmiş biznes qaydalarına əsaslanır. "
+    "Bu tövsiyələr modelin fərdi proqnozunun izahı deyil."
+)
             
             ai_comments = []
             ai_actions = []
@@ -234,9 +259,95 @@ with tab2:
                     st.write(a)
 
 # =========================================================
-# TAB 3: MODEL METRIKALARI
-# =========================================================
+
+# TAB 3: KREDİT SATIŞ PROQNOZU
+# ==================================================
+
 with tab3:
+    st.header("📈 İyul 2026 — Kredit Satış Proqnozu")
+
+    forecast_path = MODELS_DIR / "loan_sales_forecast_july_2026.csv"
+
+    if forecast_path.exists():
+        forecast_df = pd.read_csv(forecast_path)
+
+        # Ümumi proqnoz göstəriciləri
+        total_loans = int(forecast_df["kredit_sayi_proqnozu"].sum())
+        total_amount = forecast_df["satis_meblegi_proqnozu_azn"].sum()
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric("Proqnozlaşdırılan kredit sayı", f"{total_loans:,}")
+
+        with col2:
+            st.metric(
+                "Proqnozlaşdırılan satış məbləği",
+                f"{total_amount:,.2f} AZN"
+            )
+
+
+                    # Filiallar üzrə interaktiv proqnoz qrafikləri
+        import plotly.express as px
+
+        chart_col1, chart_col2 = st.columns(2)
+
+        with chart_col1:
+            fig_amount = px.bar(
+                forecast_df.sort_values("satis_meblegi_proqnozu_azn"),
+                x="satis_meblegi_proqnozu_azn",
+                y="filial",
+                orientation="h",
+                title="Filiallar üzrə satış məbləği",
+                labels={
+                    "satis_meblegi_proqnozu_azn": "Satış məbləği (AZN)",
+                    "filial": "Filial"
+                },
+                color="satis_meblegi_proqnozu_azn",
+                color_continuous_scale="Blues"
+            )
+            fig_amount.update_layout(
+                coloraxis_showscale=False,
+                height=550
+            )
+            st.plotly_chart(fig_amount, use_container_width=True)
+
+        with chart_col2:
+            fig_count = px.bar(
+                forecast_df.sort_values(
+                    "kredit_sayi_proqnozu",
+                    ascending=False
+                ),
+                x="filial",
+                y="kredit_sayi_proqnozu",
+                title="Filiallar üzrə kredit sayı",
+                labels={
+                    "kredit_sayi_proqnozu": "Kredit sayı",
+                    "filial": "Filial"
+                },
+                color="kredit_sayi_proqnozu",
+                color_continuous_scale="Teal"
+            )
+            fig_count.update_layout(
+                coloraxis_showscale=False,
+                xaxis_tickangle=-45,
+                height=550
+            )
+            st.plotly_chart(fig_count, use_container_width=True)
+
+        st.divider()
+
+        st.subheader("Filiallar üzrə proqnoz")
+        st.dataframe(forecast_df, use_container_width=True)
+
+    else:
+        st.error("Kredit satış proqnozu faylı tapılmadı.")
+
+# =========================================================
+
+# TAB 4: MODEL METRIKALARI
+# =========================================================
+with tab4:
     st.header("⚙️ Machine Learning Model Sənədləşməsi")
     
     col_m1, col_m2 = st.columns(2)
@@ -247,8 +358,19 @@ with tab3:
         st.write("* **Class Weight:** `balanced` (Disbalanslı siniflər üçün)")
         st.write(f"* **Optimal Biznes Həddi (Threshold):** `{OPTIMAL_THRESHOLD}`")
 
+   
     with col_m2:
         st.subheader("Göstəricilər (Test Dəsti Üzrə)")
-        st.write("* **ROC-AUC Balı:** `0.8410`")
-        st.write("* **Recall (Gedənləri Tutma %):** `78.5%`")
-        st.write("* **Precision (Dəqiqlik %):** `52.3%`")
+
+    if model_metrics is not None:
+        st.write(f"* **ROC-AUC:** `{model_metrics['roc_auc_test']:.4f}`")
+        st.write(f"* **PR-AUC:** `{model_metrics['pr_auc_test']:.4f}`")
+        st.write(f"* **Recall:** `{model_metrics['recall_test_at_threshold']:.1%}`")
+        st.write(f"* **Precision:** `{model_metrics['precision_test_at_threshold']:.1%}`")
+        st.write(f"* **F1-score:** `{model_metrics['f1_test_at_threshold']:.4f}`")
+        st.write(f"* **Decision Threshold:** `{model_metrics['selected_threshold']:.2f}`")
+    else:
+        st.warning("Model qiymətləndirmə nəticələri tapılmadı.")
+
+
+       
