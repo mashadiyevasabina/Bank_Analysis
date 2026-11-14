@@ -225,28 +225,7 @@ python -m streamlit run app/main.py
 **Main files:** `app/main.py`, `notebooks/3_Gold/06.Machine_Learning.ipynb`, and `models/`.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
 ## 🚀 Live Demo
 
-Try the Bank Customer Churn Risk Predictor application live:
-
-📌 **Canlı Veb Portala Keçid:** []()
-
----
-
+[Open Bank Analytics & AI Dashboard](https://bank-analysis-ai-dashboard.streamlit.app/)
